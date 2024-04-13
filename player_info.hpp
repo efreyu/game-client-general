@@ -7,7 +7,7 @@
 namespace mg::inline network {
 
     enum class eDeviceInfo : unsigned {
-        UNIQUE_ID, //get_unique_id string
+        UNIQUE_ID = 0, //get_unique_id string
         OS_NAME, //get_name string
         OS_VERSION, //get_version string
         DISTRIBUTION_NAME, //get_distribution_name string
