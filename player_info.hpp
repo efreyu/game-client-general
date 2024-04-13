@@ -7,19 +7,19 @@
 namespace mg::inline network {
 
     enum class eDeviceInfo : unsigned {
-        UNIQUE_ID = 0, //get_unique_id string
-        OS_NAME, //get_name string
-        OS_VERSION, //get_version string
-        DISTRIBUTION_NAME, //get_distribution_name string
-        MODEL_NAME, //get_model_name string
-        PROCESSOR_NAME, //get_processor_name string
-        LOCALE, //get_locale string
-        MEMORY_INFO_PHYSICAL, //get_memory_info dictionary "physical"
-        MEMORY_INFO_FREE, //get_memory_info dictionary "free"
-        MEMORY_INFO_AVAILABLE, //get_memory_info dictionary "available"
-        DEBUG_BUILD, //is_debug_build bool
-        SANDBOXED, //is_sandboxed bool
-        STDOUT_VERBOSE //is_stdout_verbose bool
+        UNIQUE_ID = 0,
+        OS_NAME,
+        OS_VERSION,
+        DISTRIBUTION_NAME,
+        MODEL_NAME,
+        PROCESSOR_NAME,
+        LOCALE,
+        MEMORY_INFO_PHYSICAL,
+        MEMORY_INFO_FREE,
+        MEMORY_INFO_AVAILABLE,
+        DEBUG_BUILD,
+        SANDBOXED,
+        STDOUT_VERBOSE
     };
 
     struct playerInfo {
