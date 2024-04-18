@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <iostream>
 
 namespace mg::inline network {
 
@@ -27,7 +28,7 @@ namespace mg::inline network {
         std::string device_id;
         std::string user_id;
         bool is_online = false;
-        unsigned session_count = 0;
+        long session_count = 0;
         std::map<unsigned, std::string> device_info;
 
         template <class Archive>
@@ -38,6 +39,14 @@ namespace mg::inline network {
             ar(is_online);
             ar(session_count);
             ar(device_info);
+        }
+
+        template <class Output>
+        Output to_stream() const {
+            Output output{};
+            output << "name" << name << "device_id" << device_id << "user_id" << user_id
+                   << "is_online" << is_online << "session_count" << session_count;
+            return output;
         }
     };
 
