@@ -24,7 +24,6 @@ namespace mg::inline network {
     };
 
     struct playerInfo {
-        playerInfo() {};
         std::string name;
         std::string device_id;
         std::string user_id;
@@ -40,16 +39,6 @@ namespace mg::inline network {
             ar(is_online);
             ar(session_count);
             ar(device_info);
-        }
-
-        // move constructor
-        playerInfo(playerInfo&& other) noexcept
-            : name(other.name)
-            , device_id(other.device_id)
-            , user_id(other.user_id)
-            , is_online(other.is_online)
-            , session_count(other.session_count)
-            , device_info(other.device_info) {
         }
 
         // used to serialize the object to bsoncxx document stream
