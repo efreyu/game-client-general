@@ -24,6 +24,7 @@ namespace mg::inline network {
     };
 
     struct playerInfo {
+        playerInfo() {};
         std::string name;
         std::string device_id;
         std::string user_id;
@@ -51,12 +52,7 @@ namespace mg::inline network {
             , device_info(other.device_info) {
         }
 
-        // assignment operator
-        playerInfo& operator=(const playerInfo& rhs) = delete;
-
-        // move assignment operator
-        playerInfo& operator=(playerInfo&& rhs) noexcept = delete;
-
+        // used to serialize the object to bsoncxx document stream
         template <class Output>
         Output to_stream() const {
             Output output{};
