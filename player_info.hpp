@@ -89,9 +89,9 @@ namespace mg::inline network {
 
             return p;
         }
-    };
-
 #endif  // PROJECT_TYPE_SERVER
+
+    };
 
 }  // namespace mg::inline network
 
