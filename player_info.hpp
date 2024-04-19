@@ -1,9 +1,6 @@
 #ifndef MGPROJECT_PLAYER_INFO_HPP
 #define MGPROJECT_PLAYER_INFO_HPP
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/document/view.hpp>
-#include <bsoncxx/json.hpp>
 #include <iostream>
 #include <map>
 #include <string>
@@ -50,10 +47,18 @@ namespace mg::inline network {
             Output output{};
             output << "name" << name << "device_id" << device_id << "user_id" << user_id
                    << "is_online" << is_online << "session_count" << session_count;
+            Output device_info_map{};
+            for (auto& [kay, val] : device_info) {
+//                Output device_info_item{};
+//                device_info_item << "id" << kay << "key" << val;
+//                device_info_map << device_info_item;
+            }
+            output << "device_info" << device_info_map;
             return output;
         }
 
-        static playerInfo from_bson(const bsoncxx::document::view& doc) {
+        template <class Input>
+        static playerInfo from_bson(const Input& doc) {
             playerInfo p;
             if (doc["name"])
                 p.name = doc["name"].get_string().value.to_string();
@@ -68,10 +73,10 @@ namespace mg::inline network {
             if (doc["device_info"]) {
                 auto dict = doc["device_info"].get_document().view();
                 for (auto&& element : dict) {
-                    int key;
-                    std::stringstream keyStream(element.key().to_string());
-                    if (keyStream >> key)
-                        p.device_info[key] = element.get_string().value.to_string();
+                    if (dict["id"] && dict["key"]) {
+                        int key = dict["key"].get_int32().value;
+                        p.device_info[key] = dict["value"].get_string().value.to_string();
+                    }
                 }
             }
 
