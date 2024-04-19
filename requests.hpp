@@ -1,5 +1,5 @@
-#ifndef MGPROJECT_REQUESTS_HPP
-#define MGPROJECT_REQUESTS_HPP
+#ifndef MGPROJECT_NETWORK_GENERAL_REQUESTS_HPP
+#define MGPROJECT_NETWORK_GENERAL_REQUESTS_HPP
 
 namespace mg::inline network::requests {
     namespace client {
