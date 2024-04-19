@@ -5,6 +5,12 @@
 #include <map>
 #include <string>
 
+#ifdef PROJECT_TYPE_SERVER
+#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/json.hpp>
+#endif
+
 namespace mg::inline network {
 
     enum class eDeviceInfo : unsigned {
@@ -41,19 +47,20 @@ namespace mg::inline network {
             ar(device_info);
         }
 
+#ifdef PROJECT_TYPE_SERVER
         // used to serialize the object to bsoncxx document stream
-        template <class Output>
-        Output to_stream() const {
-            Output output{};
+        bsoncxx::builder::stream::document to_stream() const {
+            bsoncxx::builder::stream::document output{};
             output << "name" << name << "device_id" << device_id << "user_id" << user_id
                    << "is_online" << is_online << "session_count" << session_count;
-            Output device_info_map{};
-            for (auto& [kay, val] : device_info) {
-//                Output device_info_item{};
-//                device_info_item << "id" << kay << "key" << val;
-//                device_info_map << device_info_item;
+            auto device_info_subarray = output << "device_info"
+                                               << bsoncxx::builder::stream::open_array;
+            for (const auto& [key, val] : device_info) {
+                device_info_subarray << bsoncxx::builder::stream::open_document << "id" << key
+                                     << "data" << val << bsoncxx::builder::stream::close_document;
             }
-            output << "device_info" << device_info_map;
+            device_info_subarray << bsoncxx::builder::stream::close_array;
+
             return output;
         }
 
@@ -73,9 +80,9 @@ namespace mg::inline network {
             if (doc["device_info"]) {
                 auto dict = doc["device_info"].get_document().view();
                 for (auto&& element : dict) {
-                    if (dict["id"] && dict["key"]) {
-                        int key = dict["key"].get_int32().value;
-                        p.device_info[key] = dict["value"].get_string().value.to_string();
+                    if (dict["id"] && dict["data"]) {
+                        int key = dict["id"].get_int32().value;
+                        p.device_info[key] = dict["data"].get_string().value.to_string();
                     }
                 }
             }
@@ -83,6 +90,8 @@ namespace mg::inline network {
             return p;
         }
     };
+
+#endif  // PROJECT_TYPE_SERVER
 
 }  // namespace mg::inline network
 
