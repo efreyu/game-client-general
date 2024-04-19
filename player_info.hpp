@@ -1,6 +1,9 @@
 #ifndef MGPROJECT_PLAYER_INFO_HPP
 #define MGPROJECT_PLAYER_INFO_HPP
 
+#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/document/view.hpp>
+#include <bsoncxx/json.hpp>
 #include <iostream>
 #include <map>
 #include <string>
@@ -29,7 +32,7 @@ namespace mg::inline network {
         std::string user_id;
         bool is_online = false;
         int session_count = 0;
-        std::map<unsigned, std::string> device_info;
+        std::map<int, std::string> device_info;
 
         template <class Archive>
         void serialize(Archive& ar) {
@@ -48,6 +51,31 @@ namespace mg::inline network {
             output << "name" << name << "device_id" << device_id << "user_id" << user_id
                    << "is_online" << is_online << "session_count" << session_count;
             return output;
+        }
+
+        static playerInfo from_bson(const bsoncxx::document::view& doc) {
+            playerInfo p;
+            if (doc["name"])
+                p.name = doc["name"].get_string().value.to_string();
+            if (doc["device_id"])
+                p.device_id = doc["device_id"].get_string().value.to_string();
+            if (doc["user_id"])
+                p.user_id = doc["user_id"].get_string().value.to_string();
+            if (doc["is_online"])
+                p.is_online = doc["is_online"].get_bool().value;
+            if (doc["session_count"])
+                p.session_count = doc["session_count"].get_int32().value;
+            if (doc["device_info"]) {
+                auto dict = doc["device_info"].get_document().view();
+                for (auto&& element : dict) {
+                    int key;
+                    std::stringstream keyStream(element.key().to_string());
+                    if (keyStream >> key)
+                        p.device_info[key] = element.get_string().value.to_string();
+                }
+            }
+
+            return p;
         }
     };
 
