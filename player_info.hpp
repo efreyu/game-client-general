@@ -28,7 +28,7 @@ namespace mg::inline network {
         std::string device_id;
         std::string user_id;
         bool is_online = false;
-        long session_count = 0;
+        int session_count = 0;
         std::map<unsigned, std::string> device_info;
 
         template <class Archive>
