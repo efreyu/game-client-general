@@ -1,9 +1,9 @@
 #ifndef MGPROJECT_PLAYER_INFO_HPP
 #define MGPROJECT_PLAYER_INFO_HPP
 
+#include <iostream>
 #include <map>
 #include <string>
-#include <iostream>
 
 namespace mg::inline network {
 
@@ -40,6 +40,22 @@ namespace mg::inline network {
             ar(session_count);
             ar(device_info);
         }
+
+        // move constructor
+        playerInfo(playerInfo&& other) noexcept
+            : name(other.name)
+            , device_id(other.device_id)
+            , user_id(other.user_id)
+            , is_online(other.is_online)
+            , session_count(other.session_count)
+            , device_info(other.device_info) {
+        }
+
+        // assignment operator
+        playerInfo& operator=(const playerInfo& rhs) = delete;
+
+        // move assignment operator
+        playerInfo& operator=(playerInfo&& rhs) noexcept = delete;
 
         template <class Output>
         Output to_stream() const {
