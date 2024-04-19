@@ -9,6 +9,7 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 #endif
 
 namespace mg::inline network {
@@ -64,8 +65,7 @@ namespace mg::inline network {
             return output;
         }
 
-        template <class Input>
-        static playerInfo from_bson(const Input& doc) {
+        static playerInfo from_bson(const bsoncxx::document::view& doc) {
             playerInfo p;
             if (doc["name"])
                 p.name = doc["name"].get_string().value.to_string();
@@ -78,11 +78,11 @@ namespace mg::inline network {
             if (doc["session_count"])
                 p.session_count = doc["session_count"].get_int32().value;
             if (doc["device_info"]) {
-                auto dict = doc["device_info"].get_document().view();
+                auto dict = doc["device_info"].get_array().value;
                 for (auto&& element : dict) {
-                    if (dict["id"] && dict["data"]) {
-                        int key = dict["id"].get_int32().value;
-                        p.device_info[key] = dict["data"].get_string().value.to_string();
+                    if (element["id"] && element["data"]) {
+                        int key = element["id"].get_int32().value;
+                        p.device_info[key] = element["data"].get_string().value.to_string();
                     }
                 }
             }
